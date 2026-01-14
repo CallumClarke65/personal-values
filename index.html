@@ -1,0 +1,583 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FIRMWARE</title>
+
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- Favicon link in your <head> -->
+    <link rel="icon" type="image/png" href="{{ '/assets/img/favicon.png' | relative_url }}">
+
+
+    <style>
+        :root {
+            --firmware-bg: #eaf4fb;
+            --firmware-accent: #1f4fd8;
+            --firmware-text: #1f2933;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            background-color: var(--firmware-bg);
+            color: var(--firmware-text);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                Roboto, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            position: relative;
+        }
+
+        .firmware-section {
+            padding-top: 2rem;
+            /* add space at the top of each section */
+            padding-bottom: 2rem;
+            /* optional, keep spacing between sections */
+        }
+
+        /* Global help icon */
+        .global-help {
+            position: fixed;
+            top: 1.25rem;
+            right: 1.5rem;
+            font-size: 1.4rem;
+            color: var(--firmware-accent);
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .firmware-container {
+            min-height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2.5rem 1.5rem;
+        }
+
+        .firmware-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 1.5rem;
+            padding: 4rem;
+            max-width: 1100px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .firmware-title {
+            font-size: clamp(3.5rem, 6vw, 5.5rem);
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-align: center;
+            color: var(--firmware-accent);
+        }
+
+        .firmware-header {
+            margin-top: 2rem;
+            /* optional, space from top of page */
+        }
+
+
+        .firmware-subtitle {
+            font-size: 1.25rem;
+            /* much smaller than title */
+            font-weight: 600;
+            color: rgba(31, 79, 216, 0.7);
+            /* lighter version of title color */
+            letter-spacing: 1px;
+            margin: 0;
+            margin-bottom: 3rem;
+        }
+
+        .intro-text {
+            text-align: center;
+            font-size: 1.35rem;
+            line-height: 1.7;
+            margin-bottom: 3.5rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Value rows */
+
+        .value-row {
+            border-radius: 1rem;
+            padding: 2rem 2.5rem;
+            margin-bottom: 1.25rem;
+            background: white;
+            cursor: pointer;
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            position: relative;
+        }
+
+        .value-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .value-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--firmware-accent);
+            text-align: center;
+        }
+
+        .value-help {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            font-size: 1.2rem;
+            color: var(--firmware-accent);
+            cursor: help;
+        }
+
+        .value-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .value-row.expanded .value-content {
+            max-height: 500px;
+            opacity: 1;
+            margin-top: 1.5rem;
+        }
+
+        .value-content ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .value-content li {
+            position: relative;
+            padding-left: 1.75rem;
+            margin-bottom: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .value-content li::before {
+            content: "›";
+            position: absolute;
+            left: 0;
+            color: var(--firmware-accent);
+            font-weight: bold;
+        }
+
+        /* Joy highlight */
+        .joy {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        /* Joy board */
+
+        .joy-board-wrapper {
+            position: relative;
+            margin-top: 3rem;
+        }
+
+        .joy-board-help {
+            position: absolute;
+            top: -2rem;
+            right: 0;
+            font-size: 1.2rem;
+            color: var(--firmware-accent);
+            cursor: help;
+        }
+
+        .joy-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 180px;
+            gap: 1rem;
+        }
+
+        /* Base item */
+        .joy-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            cursor: pointer;
+        }
+
+        .joy-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: filter 0.3s ease, transform 0.3s ease;
+        }
+
+        .joy-item:hover img {
+            filter: blur(4px) brightness(0.7);
+            transform: scale(1.05);
+        }
+
+        /* Overlay */
+        .joy-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            text-align: center;
+            color: white;
+            font-size: 1rem;
+            line-height: 1.5;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .joy-item:hover .joy-overlay {
+            opacity: 1;
+        }
+
+        /* Shape variants */
+        .joy-item.wide {
+            grid-column: span 2;
+        }
+
+        .joy-item.tall {
+            grid-row: span 2;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .joy-board {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .joy-board {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .team-wall {
+            display: flex;
+            flex-wrap: wrap;
+            width: calc(4 * 160px);
+            /* 4 bricks per row */
+            margin: 2rem auto;
+            /* center horizontally */
+        }
+
+        /* All bricks same size */
+        .brick {
+            width: 160px;
+            height: 80px;
+            background: white;
+            border: 4px solid black;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* No gap between bricks */
+        .brick+.brick {
+            margin-left: 0;
+        }
+
+        /* Offset the second row */
+        .team-wall .brick:nth-child(5) {
+            margin-left: 80px;
+            /* half a brick */
+        }
+
+        .results-list li {
+            display: flex;
+            align-items: center;
+            /* vertically center text with icon */
+            margin-bottom: 1.25rem;
+            line-height: 1.5;
+            font-size: 1.1rem;
+            /* larger text */
+        }
+
+        .results-list i {
+            flex-shrink: 0;
+            font-size: 1.5rem;
+            /* slightly larger icon for balance */
+            margin-right: 0.75rem;
+            /* space between icon and text */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Global help icon -->
+    <i class="bi bi-question-circle global-help" data-bs-toggle="tooltip" data-bs-placement="left"
+        title="I wrote the content of this page in Notepad++. I then used AI to assist with styling and realising my vision via HTML and JavaScript."></i>
+
+    <main class="firmware-container">
+        <div class="firmware-card">
+            <section class="firmware-section">
+
+                <header class="firmware-header text-center">
+                    <h1 class="firmware-title">FIRMWARE</h1>
+                    <h2 class="firmware-subtitle">CALLUM CLARKE</h2>
+                </header>
+
+                <p class="intro-text">
+                    My personal values are strongly influenced by my faith as a Christian.
+                    With that foundation, I've identified five traits that I strive to
+                    demonstrate through my actions in both my professional and personal life.
+                </p>
+
+                <!-- Values -->
+
+                <div class="value-row">
+                    <div class="value-title">Wisdom</div>
+                    <i class="bi bi-question-circle value-help" data-bs-toggle="tooltip" title="Click to keep open"></i>
+                    <div class="value-content">
+                        <ul>
+                            <li>Actively seeking to understand the viewpoints of others</li>
+                            <li>Preferring to listen rather than speak when topics are new to me</li>
+                            <li>Weighing pros and cons before making lasting decisions</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="value-row">
+                    <div class="value-title">Innovation</div>
+                    <i class="bi bi-question-circle value-help" data-bs-toggle="tooltip" title="Click to keep open"></i>
+                    <div class="value-content">
+                        <ul>
+                            <li>Trying, failing, learning, and trying again</li>
+                            <li>Investing time in multiple projects and prioritising what shows promise</li>
+                            <li>Being different with intent, not for novelty alone</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="value-row">
+                    <div class="value-title">Curiosity</div>
+                    <i class="bi bi-question-circle value-help" data-bs-toggle="tooltip" title="Click to keep open"></i>
+                    <div class="value-content">
+                        <ul>
+                            <li>Taking interest in unfamiliar topics and experiences</li>
+                            <li>Broadening knowledge across history, geography, and abstract ideas</li>
+                            <li>Making time for both small and large adventures</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="value-row">
+                    <div class="value-title">Integrity</div>
+                    <i class="bi bi-question-circle value-help" data-bs-toggle="tooltip" title="Click to keep open"></i>
+                    <div class="value-content">
+                        <ul>
+                            <li>Doing the right thing, especially in interpersonal situations</li>
+                            <li>Being honest even when it comes at a personal cost</li>
+                            <li>Taking ownership and following work through to completion</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="value-row">
+                    <div class="value-title">Humility</div>
+                    <i class="bi bi-question-circle value-help" data-bs-toggle="tooltip" title="Click to keep open"></i>
+                    <div class="value-content">
+                        <ul>
+                            <li>Holding strong opinions lightly and changing them when evidence improves</li>
+                            <li>Avoiding boastfulness or public self-congratulation</li>
+                            <li>Recognising when others should be elevated and helping to make sure that happens</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <hr>
+            <!-- Section 2 -->
+            <section class="firmware-section">
+
+                <p class="intro-text">
+                    Ultimately, achieving each of these traits is about being able to assist others in finding
+                    and experiencing <span class="joy">Joy</span> in their lives. For me,
+                    <span class="joy">Joy</span> can best be described as a feeling of deep satisfaction,
+                    appreciation and wholeness. <span class="joy">Joy</span> can be found via the broad
+                    brushstrokes of our lives but also in the smaller details. Below is an interactive
+                    picture-board of some of the things that bring me <span class="joy">Joy</span>,
+                    both professionally and personally.
+                </p>
+
+                <div class="joy-board-wrapper">
+
+                    <!-- Board tooltip -->
+                    <i class="bi bi-question-circle joy-board-help" data-bs-toggle="tooltip" data-bs-placement="left"
+                        title="Hover a picture for a description. Some images shamelessly ripped from Google"></i>
+
+                    <div class="joy-board">
+
+                        <div class="joy-item tall">
+                            <img src="{{ '/assets/img/samuel.png' | relative_url }}" />
+                            <div class="joy-overlay">Watching my son learn and grow</div>
+                        </div>
+
+                        <div class="joy-item">
+                            <img src="{{ '/assets/img/addersons.png' | relative_url }}" />
+                            <div class="joy-overlay">Playing music with my friends</div>
+                        </div>
+
+                        <div class="joy-item wide">
+                            <img src="{{ '/assets/img/family.png' | relative_url }}" />
+                            <div class="joy-overlay">Spending time with my family</div>
+                        </div>
+
+                        <div class="joy-item">
+                            <img src="{{ '/assets/img/bug.png' | relative_url }}" />
+                            <div class="joy-overlay">Finding the one line of code that's been causing everyone grief!
+                            </div>
+                        </div>
+
+                        <div class="joy-item tall">
+                            <img src="{{ '/assets/img/proud.png' | relative_url }}" />
+                            <div class="joy-overlay">
+                                Seeing something a friend or colleague has worked hard on come to fruition
+                            </div>
+                        </div>
+
+                        <div class="joy-item">
+                            <img src="{{ '/assets/img/5-a-side.png' | relative_url }}" />
+                            <div class="joy-overlay">
+                                Someone scoring a really fancy goal at five-a-side (bonus if it was me!)
+                            </div>
+                        </div>
+
+                        <div class="joy-item wide">
+                            <img src="{{ '/assets/img/chefs-kiss.png' | relative_url }}" />
+                            <div class="joy-overlay">A problem having an elegant solution</div>
+                        </div>
+
+                        <div class="joy-item tall">
+                            <img src="{{ '/assets/img/something-new.png' | relative_url }}" />
+                            <div class="joy-overlay">Learning and understanding something new</div>
+                        </div>
+
+                        <div class="joy-item wide">
+                            <img src="{{ '/assets/img/acc.png' | relative_url }}" />
+                            <div class="joy-overlay">Exploring my faith</div>
+                        </div>
+
+                        <div class="joy-item">
+                            <img src="{{ '/assets/img/digging.png' | relative_url }}" />
+                            <div class="joy-overlay">Uncovering a problem before it blows up into a bigger issue</div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+            <hr>
+
+            <!-- Section 3: Team building -->
+            <section class="firmware-section">
+
+                <p class="intro-text">
+                    Lastly, I'd like to share my take on what I think makes a great team.
+                    These are the building blocks that every great team is built with:
+                </p>
+
+                <div class="team-wall">
+                    <div class="brick">Empowered specialists</div>
+                    <div class="brick">Shared short-term and long-term goals</div>
+                    <div class="brick">Trust</div>
+                    <div class="brick">Positive outlooks</div>
+
+                    <div class="brick">Concise and effective communication</div>
+                    <div class="brick">Clear division of tasks</div>
+                    <div class="brick">Personal accountability</div>
+
+                    <div class="brick">Leadership by example</div>
+                    <div class="brick">Commitment to collaboration</div>
+                    <div class="brick">Diversity being celebrated</div>
+                    <div class="brick">Respect</div>
+                </div>
+
+                <p class="intro-text">
+                    You can spot which teams have been able to embrace each of these concepts via the results they
+                    achieve:
+                </p>
+
+                <ul class="results-list list-unstyled">
+                    <li>
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Deadlines and sprint goals are nearly always met. When they aren't, everyone understands why and
+                        agrees what to do about it.
+                    </li>
+                    <li>
+                        <i class="bi bi-people-fill text-primary me-2"></i>
+                        Information doesn't feel silo'd. All team members actively engage in avoiding this, both via
+                        knowledge-sharing and up-skilling.
+                    </li>
+                    <li>
+                        <i class="bi bi-speedometer2 text-warning me-2"></i>
+                        The team strikes a balance between quality and speed of delivery. Trust is a two-way street
+                        between QA and PM, with risks jointly evaluated.
+                    </li>
+                    <li>
+                        <i class="bi bi-bug-fill text-danger me-2"></i>
+                        Most issues are found and rectified early on in the software development life cycle.
+                    </li>
+                    <li>
+                        <i class="bi bi-arrow-repeat text-info me-2"></i>
+                        Quality processes are ever-evolving. There is a clear process for retrospective- and
+                        improvement- in light of particularly major bugs.
+                    </li>
+                    <li>
+                        <i class="bi bi-lightning-fill text-warning me-2"></i>
+                        Innovation can come from anyone in the team, even the more junior members.
+                    </li>
+                    <li>
+                        <i class="bi bi-calendar-check-fill text-success me-2"></i>
+                        Scrum ceremonies don't feel laborious. Instead they are focused encounters that the team feels
+                        is enabling them to do their best work.
+                    </li>
+                    <li>
+                        <i class="bi bi-bar-chart-fill text-primary me-2"></i>
+                        Project and product management retains a clear view of progress, with no last minute surprises.
+                    </li>
+                    <li>
+                        <i class="bi bi-code-slash text-secondary me-2"></i>
+                        Developers don't feel overworked, nor that they are spending too much time in meetings. They are
+                        proud of the code they produce.
+                    </li>
+                    <li>
+                        <i class="bi bi-arrows-angle-expand text-info me-2"></i>
+                        Team-wide responsibilities, such as releases, supporting the wider business and package/security
+                        updates are shared equally.
+                    </li>
+                </ul>
+            </section>
+
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ '/assets/js/script.js' | relative_url }}"></script>
+</body>
+
+</html>

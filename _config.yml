@@ -1,9 +1,9 @@
-title: "Happy Birthday Vit! 🎉🎂💖"
-description: "A birthday checklist that reveals a secret message"
+title: "FIRMWARE"
+description: "My personal core values"
 theme: null
 
 markdown: kramdown
 exclude:
   - README.md
 
-baseurl: "/birthday-checklist"
+baseurl: "/firmware"
