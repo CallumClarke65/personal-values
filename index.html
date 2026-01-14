@@ -17,6 +17,20 @@
     <!-- Favicon link in your <head> -->
     <link rel="icon" type="image/png" href="{{ '/assets/img/favicon.png' | relative_url }}">
 
+    <script>
+        function checkViewport() {
+            const warning = document.getElementById('small-screen-warning');
+            if (window.innerWidth < 800) {
+                warning.style.display = 'block';
+            } else {
+                warning.style.display = 'none';
+            }
+        }
+
+        window.addEventListener('resize', checkViewport);
+        window.addEventListener('load', checkViewport);
+    </script>
+
 
     <style>
         :root {
@@ -36,6 +50,59 @@
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
                 Roboto, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
             position: relative;
+        }
+
+        #small-screen-warning {
+            display: none;
+            /* hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(31, 79, 216, 0.95);
+            /* slightly transparent for depth */
+            color: white;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            /* horizontal centering */
+            align-items: center;
+            /* vertical centering */
+            text-align: center;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .warning-box {
+            background-color: #1f4fd8;
+            /* solid box color */
+            padding: 2rem 3rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+        }
+
+        .warning-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .warning-message {
+            font-size: 1.25rem;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        /* Show overlay on small screens and hide all other content */
+        @media (max-width: 800px) {
+            #small-screen-warning {
+                display: flex;
+            }
+
+            body> :not(#small-screen-warning) {
+                display: none;
+            }
         }
 
         .firmware-section {
@@ -327,6 +394,17 @@
 
 <body>
 
+    <div id="small-screen-warning">
+        <div class="warning-box">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-message">
+                This page is best viewed on a desktop or larger screen.<br>
+                Please use a device with a wider viewport.
+            </div>
+        </div>
+    </div>
+
+
     <!-- Global help icon -->
     <i class="bi bi-question-circle global-help" data-bs-toggle="tooltip" data-bs-placement="left"
         title="I wrote the content of this page in Notepad++. I then used AI to assist with styling and realising my vision via HTML and JavaScript."></i>
@@ -353,9 +431,12 @@
                     <i class="bi bi-question-circle value-help" data-bs-toggle="tooltip" title="Click to keep open"></i>
                     <div class="value-content">
                         <ul>
-                            <li>Actively seeking to understand the viewpoints and opinions of others to better inform my own views</li>
-                            <li>Preferring to listen rather than speak, particularly when the topic of discussion is new to me</li>
-                            <li>Ensuring that I gather and weigh pros and cons before making decisions that have a lasting impact for myself and others</li>
+                            <li>Actively seeking to understand the viewpoints and opinions of others to better inform my
+                                own views</li>
+                            <li>Preferring to listen rather than speak, particularly when the topic of discussion is new
+                                to me</li>
+                            <li>Ensuring that I gather and weigh pros and cons before making decisions that have a
+                                lasting impact for myself and others</li>
                         </ul>
                     </div>
                 </div>
@@ -366,8 +447,10 @@
                     <div class="value-content">
                         <ul>
                             <li>Trying, failing, learning, and trying again</li>
-                            <li>Investing time into a variety of projects, and prioritising those that show signs of success</li>
-                            <li>Not being afraid of being/doing different, but also not being/doing different for the sake of it</li>
+                            <li>Investing time into a variety of projects, and prioritising those that show signs of
+                                success</li>
+                            <li>Not being afraid of being/doing different, but also not being/doing different for the
+                                sake of it</li>
                         </ul>
                     </div>
                 </div>
@@ -377,8 +460,10 @@
                     <i class="bi bi-question-circle value-help" data-bs-toggle="tooltip" title="Click to keep open"></i>
                     <div class="value-content">
                         <ul>
-                            <li>Taking an interest in things that are new to me, and making sure that I try things that scare me every once in a while</li>
-                            <li>Seeking to broaden my knowledge on topics that I find interesting, be that History, Geography or something altogether more abstract!</li>
+                            <li>Taking an interest in things that are new to me, and making sure that I try things that
+                                scare me every once in a while</li>
+                            <li>Seeking to broaden my knowledge on topics that I find interesting, be that History,
+                                Geography or something altogether more abstract!</li>
                             <li>Making time for both small and large adventures</li>
                         </ul>
                     </div>
@@ -389,9 +474,11 @@
                     <i class="bi bi-question-circle value-help" data-bs-toggle="tooltip" title="Click to keep open"></i>
                     <div class="value-content">
                         <ul>
-                            <li>Making sure that at all times, I do "the right thing", particularly inter-personally</li>
+                            <li>Making sure that at all times, I do "the right thing", particularly inter-personally
+                            </li>
                             <li>Being honest even when it comes at a personal cost</li>
-                            <li>Having ownership of solving or delivering things; following things through until everyone agrees that they're complete</li>
+                            <li>Having ownership of solving or delivering things; following things through until
+                                everyone agrees that they're complete</li>
                         </ul>
                     </div>
                 </div>
@@ -401,7 +488,8 @@
                     <i class="bi bi-question-circle value-help" data-bs-toggle="tooltip" title="Click to keep open"></i>
                     <div class="value-content">
                         <ul>
-                            <li>Having strong opinions that are only weakly held, and therefore being willing to change my mind when presented with better evidence</li>
+                            <li>Having strong opinions that are only weakly held, and therefore being willing to change
+                                my mind when presented with better evidence</li>
                             <li>Avoiding boastfulness or public self-congratulation</li>
                             <li>Recognising when others should be elevated and helping to make sure that happens</li>
                         </ul>
