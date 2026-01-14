@@ -6,4 +6,4 @@ markdown: kramdown
 exclude:
   - README.md
 
-baseurl: "/firmware"
+baseurl: "/personal-values"
